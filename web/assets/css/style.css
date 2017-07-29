@@ -1,0 +1,16 @@
+.table-center {
+    margin: 0px auto;
+    float: none;
+}
+.div-center {
+    margin: 0px auto;
+    float: none;
+}
+
+.form-control-70percent {
+    width: 70%;
+}
+banner-image-resized {
+    width: 50%;
+    height: auto;
+}
