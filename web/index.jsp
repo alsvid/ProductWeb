@@ -18,6 +18,7 @@ and open the template in the editor.
             <ul class="nav navbar-nav">
                 <li><a href="index.jsp">Home</a></li>
                 <li><a href="Controller?action=showProducts">Products</a></li>
+                <li><a href="availableproducts.jsp">Available products</a></li>
             </ul>
         </div>
          </nav>

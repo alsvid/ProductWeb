@@ -10,6 +10,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import domain.db.ProductRepositoryInMemory;
 import domain.model.Product;
 import java.io.IOException;
+import java.util.ArrayList;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -28,12 +29,13 @@ public class RefreshProductlistHandler extends RequestHandler {
     
     @Override
     public void handleRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        Product product = products.findProductWithId(Integer.parseInt(request.getParameter("productToRefresh")));
-        String productJSON = this.toJSON(product);
+        ArrayList<Product> productlist = this.products.getProductenlijst();
+        String productJSON = this.toJSON(productlist);
+        response.setContentType("application/json");
         response.getWriter().write(productJSON);
     }
     
-    private String toJSON(Product p) throws JsonProcessingException {
+    private String toJSON(ArrayList<Product> p) throws JsonProcessingException {
         ObjectMapper mapper = new ObjectMapper();
         return mapper.writeValueAsString(p);
     }

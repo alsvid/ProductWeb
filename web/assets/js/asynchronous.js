@@ -1,36 +1,30 @@
 var xHRObject = new XMLHttpRequest();
-var refreshbutton = document.getElementById('refreshbutton');
-refreshbutton.onclick = getNewQuote;
-
-function getRefreshedData () {
+var serverResponse;
+function getProducts() {
 	xHRObject.open("GET", "Controller?action=refreshProductlist", true);
-	xHRObject.onreadystatechange = getData;
+	xHRObject.onreadystatechange = function() {
+		if (this.readyState == 4 && this.status == 200) {
+			createTable();
+		}
+	};
 	xHRObject.send(null);
 }
 
-function getData () {
-	if (xHRObject.status == 200) {
-		if (xHRObject.readyState == 4) {
-			var serverResponse = JSON.parse(xHRObject.responseText);
-			var product = serverResponse.product; // of je kan ook doen: serverResponse["quote"]
-	
-			var testDiv = document.getElementById("testdiv");
-			var productTableRow = testDiv.childNodes[0];
-			
-			if (productTableRow == null) {
-				productTableRow = document.createElement('tr');
-                                productTableRow.appendChild('td');
-				productTableRow.id = "testid";
-				var quoteText = document.createTextNode(quote);
-				quoteParagraph.appendChild(quoteText);
-				quoteDiv.appendChild(quoteParagraph);
-			}
-			else {
-				var quoteText = document.createTextNode(quote);
-				quoteParagraph.removeChild(quoteParagraph.childNodes[0]);
-				quoteParagraph.appendChild(quoteText);
-			}	
+function createTable() {
+	serverResponse = JSON.parse(xHRObject.responseText);
+	var table = "<table><tr><th><b>Name</b></th><th><b>Status</b></th></tr>";
+
+	for (x in serverResponse) {
+		var visible = false;
+		if (serverResponse[x].aantal !== 0) {
+			visible = true;
 		}
+		table += "<tr><td class='product" + x + "'>"
+				+ serverResponse[x].productnaam + "</td><td>"
+				+ serverResponse[x].status + "</td></tr>";
 	}
-}var quotebutton = document.getElementById('quotebutton');
-quotebutton.onclick = getNewQuote;
+
+	table += "</table>";
+	document.getElementById("productTable").innerHTML = table;
+	setTimeout("getProducts()", 5000);
+}

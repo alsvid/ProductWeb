@@ -39,7 +39,6 @@ and open the template in the editor.
                 <c:if test="${sessionScope.user.getRoleString() == 'administrator'}">
                 <th class="col-md-1 text-center">&nbsp;</th>
                 </c:if>
-                <th class="col-md-1 text-center">&nbsp;</th>
             </tr>
   
                 <c:forEach var="product" items="${products}">
@@ -79,9 +78,7 @@ and open the template in the editor.
                             <a href="Controller?action=updateProduct&productIdToUpdate=<c:out value='${product.id}'/>" class="btn">Update</a>
                         </td>
                         </c:if>
-                        <td>
-                        <input type="button" id="refreshbutton" name="productToRefresh" value="<c:out value='${product.id}'/>" onclick="getRefreshedData();"/>
-                        <td
+
                     </tr>
                 </c:forEach>
             </tr>
