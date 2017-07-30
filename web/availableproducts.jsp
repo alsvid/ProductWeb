@@ -32,7 +32,7 @@
         </div>
         </center>
         <center>
-            <div id="productTable"></div>
+            <div id="productTable" class="table-responsive div-center"></div>
         </center>
         </div>
          <script src="assets/js/jquery-3.2.1.min.js"></script>

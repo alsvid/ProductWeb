@@ -12,18 +12,14 @@ function getProducts() {
 
 function createTable() {
 	serverResponse = JSON.parse(xHRObject.responseText);
-	var table = "<table><tr><th><b>Name</b></th><th><b>Status</b></th></tr>";
+	var table = "<table class='table-striped table-hover text-center table-center' id='myTable'><tr><th class='col-md-1 text-center'><b>Name</b></th><th class='col-md-1 text-center'><b>Status</b></th></tr>";
 
 	for (x in serverResponse) {
-		var visible = false;
-		if (serverResponse[x].aantal !== 0) {
-			visible = true;
-		}
-		table += "<tr><td class='product" + x + "'>"
-				+ serverResponse[x].productnaam + "</td><td>"
+		table += "<tr><td class='product" + x + "' " + "class='col-md-1 text-center'>"
+				+ serverResponse[x].productnaam + "</td><td class='col-md-1 text-center'>"
 				+ serverResponse[x].status + "</td></tr>";
 	}
-
+        
 	table += "</table>";
 	document.getElementById("productTable").innerHTML = table;
 	setTimeout("getProducts()", 5000);
