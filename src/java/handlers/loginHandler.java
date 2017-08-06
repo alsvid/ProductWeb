@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import domain.db.*;
 import domain.model.*;
+import java.util.ArrayList;
 import javax.servlet.http.HttpSession;
 /**
  *
@@ -19,7 +20,9 @@ import javax.servlet.http.HttpSession;
 public class loginHandler extends RequestHandler {
     
     private PersonRepositoryInMemory persons = new PersonRepositoryInMemory();
-
+    private SubjectRepositoryInMemory subjects = new SubjectRepositoryInMemory();
+    private ArrayList<Person> helpdesks = persons.getAllHelpdeskMembers();
+    
     public loginHandler(PersonRepositoryInMemory persons) {
         this.persons = persons;
     }
@@ -38,6 +41,8 @@ public class loginHandler extends RequestHandler {
             
             request.setAttribute("login", true);
             request.setAttribute("loggedInPerson", p);
+            request.setAttribute("subjects", subjects.getSubjectlist());
+            request.setAttribute("helpdeskmembers", helpdesks);
             session.setAttribute("user", p);
             request.getRequestDispatcher("Controller?action=index").forward(request, response);
         }

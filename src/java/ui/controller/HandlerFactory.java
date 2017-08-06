@@ -18,6 +18,7 @@ import javax.servlet.http.HttpServletResponse;
 public class HandlerFactory {
     ProductRepositoryInMemory products = new ProductRepositoryInMemory();
     PersonRepositoryInMemory persons = new PersonRepositoryInMemory();
+    SubjectRepositoryInMemory subjects = new SubjectRepositoryInMemory();
     
     public HandlerFactory() {
       
@@ -43,8 +44,14 @@ public class HandlerFactory {
                 return new AddProductHandler(products);
             case "refreshProductlist":
                 return new RefreshProductlistHandler(products);
+            case "getHelpdeskmembers":
+                return new RefreshHelpdeskmembersHandler(persons);
+            case "getConversation":
+                return new GetConversationHandler(persons);
+            case "newConversation":
+                return new NewConversationHandler(persons);
             default:
-                return new IndexHandler();
+                return new IndexHandler(subjects);
         }
         }
 }

@@ -5,6 +5,7 @@
  */
 package handlers;
 
+import domain.db.SubjectRepositoryInMemory;
 import java.io.IOException;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -17,12 +18,15 @@ import javax.servlet.http.HttpServletResponse;
  */
 public class IndexHandler extends RequestHandler {
     
-    public IndexHandler() {
-        
+    private SubjectRepositoryInMemory subjects = new SubjectRepositoryInMemory();
+    
+    public IndexHandler(SubjectRepositoryInMemory subjects) {
+        this.subjects = subjects;
     }
 
     @Override
     public void handleRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        request.setAttribute("subjects", subjects.getSubjectlist());
         RequestDispatcher view = request.getRequestDispatcher("index.jsp");
         view.forward(request, response);
     }

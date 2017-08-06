@@ -4,12 +4,6 @@
     Author     : Alsvid
 --%>
 
-<%-- 
-    Document   : register
-    Created on : 26-jul-2017, 17:58:31
-    Author     : Alsvid
---%>
-
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <!--
@@ -64,7 +58,7 @@ and open the template in the editor.
 					</p>
                                         
 					<p>
-						<label for="status">Status</label> <input type="status"
+						<label for="status">Status</label> <input type="text"
 							id="status" name="status" value="<c:out value='${productPlaceHolder.status}'/>">
 					</p>
 
