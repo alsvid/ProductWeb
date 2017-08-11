@@ -38,7 +38,7 @@ public class loginHandler extends RequestHandler {
             session = request.getSession();
             session.setAttribute("loginid", userid);
             session.setMaxInactiveInterval(3600);
-            
+            session.setAttribute("role",p.getRoleString());
             request.setAttribute("login", true);
             request.setAttribute("loggedInPerson", p);
             request.setAttribute("subjects", subjects.getSubjectlist());

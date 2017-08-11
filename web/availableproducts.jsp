@@ -14,16 +14,8 @@
         <link rel="stylesheet" type="text/css" href="assets/css/style.css">
     </head>
     <body onload="getProducts()">
-        <header>
-         <nav class="navbar navbar-toggleable-md navbar-inverse bg-inverse fixed-top">
-         <div class="navbar-collapse collapse">
-            <ul class="nav navbar-nav">
-                <li><a href="index.jsp">Home</a></li>
-                <li><a href="Controller?action=showProducts">Products</a></li>
-            </ul>
-        </div>
-         </nav>
-        </header>
+        <jsp:include page="header.jsp"></jsp:include>
+        
         <div class="table-responsive div-center">
         <center>
         <h1>Products</h1>

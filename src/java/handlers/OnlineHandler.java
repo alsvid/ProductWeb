@@ -6,11 +6,8 @@
 package handlers;
 
 import domain.db.PersonRepositoryInMemory;
-import domain.db.SubjectRepositoryInMemory;
 import domain.model.Person;
 import java.io.IOException;
-import java.util.ArrayList;
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -19,29 +16,23 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author Alsvid
  */
-public class IndexHandler extends RequestHandler {
+public class OnlineHandler extends RequestHandler {
     
-    private SubjectRepositoryInMemory subjects = new SubjectRepositoryInMemory();
     private PersonRepositoryInMemory persons = new PersonRepositoryInMemory();
-    private ArrayList<Person> helpdesks = persons.getAllHelpdeskMembers();
     
-    public IndexHandler() {
-
+    public OnlineHandler(PersonRepositoryInMemory persons) {
+        this.persons = persons;
     }
 
     @Override
     public void handleRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         Person accountholder = (Person) request.getSession().getAttribute("user");
-        if (accountholder != null) {
-        request.setAttribute("subjects", subjects.getSubjectlist());
-        request.setAttribute("helpdeskmembers", helpdesks);
-        RequestDispatcher view = request.getRequestDispatcher("index.jsp");
-        view.forward(request, response);
+        for (Person p : persons.getPersonlist()) {
+            if (p.equals(accountholder)) {
+                p.setStatus("ONLINE");
+            }
         }
-        else {
-            response.sendRedirect("index.jsp");
-        }
+        response.sendRedirect("Controller?action=defaulthandler");
     }
-    
     
 }

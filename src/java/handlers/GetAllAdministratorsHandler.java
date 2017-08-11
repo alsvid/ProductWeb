@@ -5,32 +5,37 @@
  */
 package handlers;
 
-import java.io.IOException;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import domain.db.PersonRepositoryInMemory;
 import domain.model.Person;
+import java.io.IOException;
 import java.util.ArrayList;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  *
  * @author Alsvid
  */
-public class RefreshHelpdeskmembersHandler extends RequestHandler {
+public class GetAllAdministratorsHandler extends RequestHandler {
 
     private PersonRepositoryInMemory persons = new PersonRepositoryInMemory();
-            
-    public RefreshHelpdeskmembersHandler(PersonRepositoryInMemory persons) {
+    
+    public GetAllAdministratorsHandler(PersonRepositoryInMemory persons) {
         this.persons = persons;
     }
-
+    
+    
     @Override
     public void handleRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        ArrayList<Person> helpdesks = persons.getAllHelpdeskMembers();
+        ArrayList<Person> out = persons.getAllAdministrators();
         response.setContentType("application/json");
-        response.getWriter().write(new ObjectMapper().writeValueAsString(helpdesks));
+        response.setHeader("Access-Control-Allow-Origin", "*");
+        System.out.println(new ObjectMapper().writeValueAsString(out));
+        response.getWriter().write(new ObjectMapper().writeValueAsString(out));
+        
+        
     }
     
 }

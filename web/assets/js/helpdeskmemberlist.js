@@ -15,13 +15,12 @@ function createHelpdeskLayout() {
 	var table = "<table class='helpdesktable' id='helpdesktable'>";
 
 	for (x in serverResponse) {
-            table += "<tr><td><div class='userid" + x + "'>"
+            table += "<tr class='user_row'><td><div id='" + serverResponse[x].userid + "' class='user'>"
             + serverResponse[x].userid + "</div></td>"
-            + "<td>" + serverResponse[x].status + "</td>"
-            + "<td><button type='button' id='" + serverResponse[x].status + "' class='startButton" + x + "'</button>";
+            + "<td><div id='" + serverResponse[x].userid + "' class='user'>" + serverResponse[x].status + "</div></td></tr>";
 	}
         
 	table += "</table>";
 	document.getElementById("helpdeskmemberlist").innerHTML = table;
-	setTimeout("getHelpdeskmembers()", 5000);
+	setTimeout("getHelpdeskmembers()", 6000);
 }

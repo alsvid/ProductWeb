@@ -34,6 +34,8 @@ public class HandlerFactory {
                 return new ProductOverviewHandler(products);
             case "login":
                 return new loginHandler(persons);
+            case "logOut":
+                return new LogoutHandler();
             case "register":
                 return new registerHandler(persons);
             case "updateProduct":
@@ -50,8 +52,20 @@ public class HandlerFactory {
                 return new GetConversationHandler(persons);
             case "newConversation":
                 return new NewConversationHandler(persons);
+            case "refreshOpenconversations":
+                return new RefreshOpenconversationsHandler();
+            case "setOnline":
+                return new OnlineHandler(persons);
+            case "setOffline":
+                return new OfflineHandler(persons);
+            case "setAway":
+                return new AwayHandler(persons);
+            case "setCustom":
+                return new CustomHandler(persons);
+            case "defaulthandler":
+                return new IndexHandler();
             default:
-                return new IndexHandler(subjects);
+                return new IndexHandler();
         }
         }
 }

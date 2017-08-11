@@ -10,17 +10,26 @@ webSocket.onmessage = function(event) {
 				+ serverResponse[x]["commentid"]);
 		var commentwriter = commentDiv.childNodes[1];
                 var commentcontent = commentDiv.childNodes[0];
-
+                var header = document.createElement('div');
+                var headerclass = header.setAttribute('class','panel-heading');
+                var panelbody = document.createElement('div');
+                var panelbodyclass = panelbody.setAttribute('class','panel-body');
 		var node1 = document.createTextNode("Comment by "
 				+ serverResponse[x]["writer"]);
 		var node2 = document.createTextNode(serverResponse[x]["content"]);		
-		var writerparagraph = document.createElement("p");
+		var writerparagraph = document.createElement("h3");
+                var writerparagraphclass = writerparagraph.setAttribute('class','panel-title');
                 var contentparagraph = document.createElement("p");
+                var panelsuccess = document.createElement('div');
+                var panelsuccessclass = panelsuccess.setAttribute('class','panel panel-success panelresizeclass');
 
 		writerparagraph.appendChild(node1);
                 contentparagraph.appendChild(node2);
-		commentDiv.appendChild(writerparagraph);
-                commentDiv.appendChild(contentparagraph);
+                header.appendChild(writerparagraph);
+                panelbody.appendChild(contentparagraph);
+                panelsuccess.appendChild(header);
+                panelsuccess.appendChild(panelbody);
+                commentDiv.appendChild(panelsuccess);
 	}
 };
 
@@ -30,7 +39,7 @@ function sendMessage(subjectid) {
 			+ "::" + subjectid;
 
 	document.getElementById("inputFieldComment" + subjectid).value = "";
-	document.getElementById("inputFieldComment" + subjectid).value = "Leave your name here..."
+	document.getElementById("inputFieldComment" + subjectid).value = "Anonymous"
         document.getElementById("inputFieldName" + subjectid).value = "";
         document.getElementById("inputFieldName" + subjectid).placeholder = "Leave a comment here...";
 

@@ -1,13 +1,14 @@
+
 var person;
 var activated = false;
 
 $(function() {
     $(".chatPanelSubmit").on("click", function() {
-        if (person != null) {
+        if (person !== null) {
             var data = {
                 "person" : person,
-                "message" : $(".chatPanelInputBox").val()
-            }
+                "message" : $(".msg_input").val()
+            };
             $.ajax({
                 type: "POST",
                 data: {
@@ -16,37 +17,40 @@ $(function() {
                 dataType: "JSON",
                 url: "Controller?action=newConversation",
                 success: function(response) {
-                    $(".chatPanelChat").text("");
+                    $(".msg_input").val("");
+                    $(".msg_insert").text("");
                     for (i in response) {
-                        $(".chatPanelChat").append("<p>" + response[i].writer + ": " + response[i].content + "</p>");
+                        if (response[i].writer == person) {
+                            $(".msg_insert").append("<div class='msg_a'>" + response[i].content + "</div>");
+                            }
+                            else {
+                            $(".msg_insert").append("<div class='msg_b'>" + response[i].content + "</div>");
+                            }
                     }
                 }
             });
         }
         else {
-            $(".chatPanelTitle").text("Start a conversation with one of our employees");
+            $(".msg_head").text("No conversation");
         }
         
-        $(".chatPanelTitle").val("");
+        $(".msg_head").val("");
     });
     
-    (".toggleChat").on("click", function() {
-        $(".chatPanel").animate({
-            width: 'toggle'
-        }, 300);
-    });
+
     
     $(document).on(
         "click",
-	":button",
+	".user",
             function() {
-		var myClass = $(this).attr("class");
-		var index = myClass.replace(/^\D+/g, '');
-		person = serverResponse[index].userid;
-
-		$(".chatPanel").animate({
-		width : 'show'
-		}, 300);
+		var myClass = $(this).attr("id");
+		person = myClass;
+                $(".msg_head").show();
+                $(".msg_wrap").show();
+                $(".msg_box").show();
+                $(".msg_insert").text("");
+                $(".msg_head").text("");
+		$(".msg_head").append(person);
 	chatActivate();
     });
 });
@@ -56,7 +60,7 @@ function chatActivate() {
 		getChat();
 		activated = true;
 	}
-}
+};
 
 function getChat() {
 	var data = {
@@ -71,16 +75,26 @@ function getChat() {
 		dataType : "JSON",
 		url : "Controller?action=getConversation",
 		success : function(response) {
-			$(".chatPanelChat").text("");
-			$(".chatPanelTitle").text("Connected with " + person);
-			for (i in response) {
-				$(".chatPanelChat").append("<p>" + response[i].writer + ": " + response[i].content + "</p>");
-			}
+			$(".msg_insert").text("");
+                        $(".msg_head").text("");
+			$(".msg_head").text(person);
+                        for (i in response) {
+                            if (response[i].writer == person) {
+                            $(".msg_insert").append("<div class='msg_a'>" + response[i].content + "</div>");
+                            }
+                            else {
+                            $(".msg_insert").append("<div class='msg_b'>" + response[i].content + "</div>");
+                            }
+                        }
 		},
 		fail : function() {
-			$(".chatPanelTitle").text("Failed connection");
+			$(".msg_head").text("Failed connection");
 		}
 	});
 	setTimeout(getChat, 3000);
 
-}
+};
+
+$.fn.scrollBottom = function() { 
+  return $(document).height() - this.scrollTop() - this.height(); 
+};

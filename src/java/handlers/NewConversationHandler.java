@@ -28,7 +28,6 @@ import org.json.simple.parser.ParseException;
 public class NewConversationHandler extends RequestHandler {
     
     private PersonRepositoryInMemory persons = new PersonRepositoryInMemory();
-    private ConversationRepositoryInMemory conversations = new ConversationRepositoryInMemory();
     
     public NewConversationHandler(PersonRepositoryInMemory persons) {
         this.persons = persons;
@@ -37,9 +36,8 @@ public class NewConversationHandler extends RequestHandler {
     @Override
     public void handleRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String dataString = request.getParameter("data");
-        
         JSONParser parser = new JSONParser();
-        Object object = null;
+        Object object = new Object();
         try {
             object = parser.parse(dataString);
         } catch (ParseException ex) {
@@ -50,17 +48,25 @@ public class NewConversationHandler extends RequestHandler {
         Person helpdeskmember = persons.findPersonWithUserid(jsondata.get("person").toString().trim());
         Person accountholder = (Person) request.getSession().getAttribute("user");
         
-        Conversation convo = conversations.createConversation(accountholder, helpdeskmember);
-        Message newmessage = new Message(accountholder.getUserid(), jsondata.get("message").toString());
         
-        convo.addMessage(newmessage);
-        if (convo.getMessagelist() != null) {
-            response.setContentType("application/json");
-            response.getWriter().write(new ObjectMapper().writeValueAsString(convo.getMessagelist()));
+        Message newMessage = new Message(accountholder.getUserid(),jsondata.get("message").toString());
+       
+        Conversation convo = checkIfConversationAvailable(accountholder,helpdeskmember);
+        
+        if (convo == null) {
+            convo = new Conversation(accountholder, helpdeskmember);
+            convo.addMessage(newMessage);
+            getConversations().add(convo);
         }
-    }
-    
-    
-    
+        else {
+            addMessageToList(convo,newMessage);
+        }
+            
+        
+        
+        response.setContentType("application/json");
+        response.getWriter().write(new ObjectMapper().writeValueAsString(getConversationMessageList(convo)));
+        
+    }  
     
 }

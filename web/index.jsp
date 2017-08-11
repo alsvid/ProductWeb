@@ -7,38 +7,36 @@ and open the template in the editor.
 -->
 <html>
     <head>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
         <title>index page</title>
         <meta charset="UTF-8">
         <link rel="stylesheet" type="text/css" href="assets/css/bootstrap.min.css">
+        <link rel="stylesheet" type="text/css" href="assets/css/style.css">
     </head>
-    
-    <c:if test="${user != null}">
-	<div class="chatPanel">
-		<h3 class="chatPanelTitle">Click on 'Click here' in your
-			friendslist to start a conversation.</h3>
-		<input type="text" class="chatPanelInputBox"> <input
-			type="submit" class="chatPanelSubmit" value="Stuur bericht">
-		<p class="chatPanelChat"></p>
-	</div>
-	
-	<p class="toggleChat">
-		Toon/verberg <br> Chatpaneel
-	</p>
-    </c:if>
-    
-    <body>
-        <header>
-         <nav class="navbar navbar-toggleable-md navbar-inverse bg-inverse fixed-top">
-         <div class="navbar-collapse collapse">
-            <ul class="nav navbar-nav">
-                <li><a href="index.jsp">Home</a></li>
-                <li><a href="Controller?action=showProducts">Products</a></li>
-                <li><a href="Controller?action=showHelpdesk">Helpdesk accounts</a></li>
-                <li><a href="availableproducts.jsp">Available products</a></li>
-            </ul>
-        </div>
-         </nav>
-        </header>
+        <c:choose>
+            <c:when test="${sessionScope.role == 'client' || sessionScope.role == 'administrator'}">
+                <body onload="getHelpdeskmembers()">
+            </c:when>
+            <c:otherwise>
+                <body onload="getOpenconversations()">
+            </c:otherwise>
+        </c:choose>
+            <jsp:include page="header.jsp"></jsp:include>
+            <c:if test="${!login || sessionScope.loginid == null}">
+                <div class="well logininfowell">
+                    <h4>Administrator account</h4>
+                    <p>Name: brechttheys</p>
+                    <p>Password: admin</p>
+                    <br>
+                    <h4>Helpdesk account</h4>
+                    <p>Name: Helpdesk-Danny</p>
+                    <p>Password: helpdesk</p>
+                    <br>
+                    <h4>Client account</h4>
+                    <p>Name: Rach</p>
+                    <p>Password: client</p>
+                </div>
+            </c:if>
         <div>
             
                        <c:choose>
@@ -59,26 +57,31 @@ and open the template in the editor.
 						<li>${error}</li>
 					</ul>
 				</c:if>
-                                
+                                <center>
 				<form method="post" action="Controller?action=login">
 					<p>
-                                            <label for="userid">User id</label><br> <input type="text" id="userid"
+                                            <label for="userid">User id</label><br> <input type="text" class="form-control bloginput" id="userid"
 							name="userid" value="<c:out value='${person.userid}'/>">
 					</p>
 					<p>
                                             <label for="password">Password</label><br> <input type="password"
-							id="password" name="password" value="<c:out value=''/>">
+							class="form-control bloginput" id="password" name="password" value="<c:out value=''/>">
 					</p>
 
-					<input type="submit" id="log in" name="submit" value="Log in">
-                                        <input type="submit" value="Register" name="Submit" formaction="register.jsp"/>
+					<input class="btn btn-default" type="submit" id="log in" name="submit" value="Log in">
+                                        <input class="btn btn-default" type="submit" value="Register" name="Submit" formaction="register.jsp"/>
 				</form>
+                                </center>
                                 </c:otherwise>
                             </c:choose>
                                
         </div>
+    <center>
+        <c:if test="${login || sessionScope.loginid != null}">
         <div class="blog-div">
+            <c:if test="${login || sessionScope.loginid != null}">
             <h3>Let us know your opinion on these subjects...</h3>
+            </c:if>
             <c:forEach var="subject" items="${subjects}">
                 <h4 id="subject${subject.subjectid}">${subject.subject}</h4>
                 <div id="comments${subject.subjectid}">
@@ -91,18 +94,32 @@ and open the template in the editor.
                     </p>
                     </c:forEach>
                 </div>
-                <input type="text" id="inputFieldComment${subject.subjectid}" required="required" value="<c:out value='${sessionScope.loginid}' />">
-                <input type="text" id="inputFieldName${subject.subjectid}" required="required" placeholder="Leave a comment here...">
-                <input type="submit" id="Submit${subject.subjectid}" value="Submit" onclick="sendMessage(${subject.subjectid})">
+                <input type="text" id="inputFieldComment${subject.subjectid}" required="required" class="form-control bloginput" value="Anonymous">
+                <textarea type="text" id="inputFieldName${subject.subjectid}" required="required" class="form-control bloginputtextarea" placeholder="Leave a comment here..."></textarea>
+                <input type="submit" id="Submit${subject.subjectid}" value="Submit" class="btn btn-lg btn-success blogbutton" onclick="sendMessage(${subject.subjectid})">
             </c:forEach>
         </div>
-        
-        <div id="helpdeskmemberlist">
-            <table id="helpdesktable" class="helpdesktable" varStatus="loop">
+        </c:if>
+    </center>
+        </main>
+        <c:if test="${login || sessionScope.loginid != null}">
+        <div id="openConversations">
+            
+        </div>
+        </c:if>
+        <c:if test="${login || sessionScope.loginid != null}">
+         <c:if test="${!sessionScope.user.isHelpdesk()}">
+         <div class="chat_box">
+            <div class="chat_head">
+                Helpdesk
+            </div>
+            <div class="chat_body">
+                <div id="helpdeskmemberlist">
+                <table id="helpdesktable" class="helpdesktable" varStatus="loop">
                 <c:forEach var="member" items="${helpdeskmembers}">
                 <tr>
                     <td class="helpdesktablerow">
-                        <div class="userid${loop.index}">
+                        <div id="user" class="userid${loop.index}">
                             ${member.userid}
                         </div>
                     </td>
@@ -110,14 +127,40 @@ and open the template in the editor.
                         ${member.status}
                     </td>
                     <td>
-                        <button type="button" id="${member.status}" class="startButton${loop.index}">Click here</button>
+                        <button type="button" id="${member.userid}" class="startButton${loop.index}">Click here</button>
                     </td>
                 </tr>
                 </c:forEach>
+            </table>
+            </div>
+            </div>
         </div>
+         </c:if>
+        <div class="msg_box" style="right:290px">
+            <div class="msg_head">
+                <div class="close">X</div>
+            </div>
+            <div class="msg_wrap">
+            <div class="msg_body">
+                <div class="msg_insert"></div>
+            </div>
+            <div class="msg_footer">
+                <textarea class="msg_input" rows="4"></textarea>
+                <input id="btn btn-default" style="width: 100%;" type="submit" class="chatPanelSubmit" value="Submit">
+            </div>
+            </div>
+        </div>
+        </c:if>
         <script src="assets/js/websocketblog.js"></script>
+        <c:if test="${!sessionScope.user.isHelpdesk()}">
         <script src="assets/js/helpdeskmemberlist.js"></script>
-        <script src="assets/js/chatscript.js"></script>
+        </c:if>
         <script src="assets/js/jquery-3.2.1.min.js"></script>
+        <script src="assets/js/chatscript.js"></script>
+        <script src="assets/js/chatboxscript.js"></script>
+        <c:if test="${sessionScope.user.isHelpdesk()}">
+        <script src="assets/js/openconversations.js"></script>
+        </c:if>
+        <script src="assets/js/start.js"></script>
     </body>
 </html>
