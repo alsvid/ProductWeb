@@ -33,13 +33,15 @@ public class IndexHandler extends RequestHandler {
     public void handleRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         Person accountholder = (Person) request.getSession().getAttribute("user");
         if (accountholder != null) {
-        request.setAttribute("subjects", subjects.getSubjectlist());
         request.setAttribute("helpdeskmembers", helpdesks);
+        request.setAttribute("subjects", subjects.getSubjectlist());
         RequestDispatcher view = request.getRequestDispatcher("index.jsp");
         view.forward(request, response);
         }
         else {
-            response.sendRedirect("index.jsp");
+            request.setAttribute("subjects", subjects.getSubjectlist());
+            RequestDispatcher view = request.getRequestDispatcher("index.jsp");
+            view.forward(request, response);
         }
     }
     

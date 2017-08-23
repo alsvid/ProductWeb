@@ -6,6 +6,7 @@
 package handlers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import domain.db.AdminPersonAngular;
 import domain.db.PersonRepositoryInMemory;
 import domain.model.Person;
 import java.io.IOException;
@@ -29,9 +30,14 @@ public class GetAllAdministratorsHandler extends RequestHandler {
     
     @Override
     public void handleRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        ArrayList<Person> out = persons.getAllAdministrators();
+        ArrayList<Person> temp = persons.getAllAdministrators();
+        ArrayList<AdminPersonAngular> out = new ArrayList<>();
+        AdminPersonAngular adminangular = null;
+        for (Person p : temp) {
+            adminangular = new AdminPersonAngular(p.getFirstname(), p.getLastname(), p.getUserid(), p.getStatus());
+            out.add(adminangular);
+        }
         response.setContentType("application/json");
-        response.setHeader("Access-Control-Allow-Origin", "*");
         System.out.println(new ObjectMapper().writeValueAsString(out));
         response.getWriter().write(new ObjectMapper().writeValueAsString(out));
         

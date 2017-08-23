@@ -22,7 +22,7 @@ and open the template in the editor.
             </c:otherwise>
         </c:choose>
             <jsp:include page="header.jsp"></jsp:include>
-            <c:if test="${!login || sessionScope.loginid == null}">
+            <c:if test="${sessionScope.user == null}">
                 <div class="well logininfowell">
                     <h4>Administrator account</h4>
                     <p>Name: brechttheys</p>
@@ -77,7 +77,9 @@ and open the template in the editor.
                                
         </div>
     <center>
-        <c:if test="${login || sessionScope.loginid != null}">
+        <c:if test="${sessionScope.user == null}">
+            <a href="Controller?action=defaulthandler" class="btn btn-success hideshowblogbutton" style="width: 50%;margin-top: 2%;">Show blogs</a>
+        </c:if>
         <div class="blog-div">
             <c:if test="${login || sessionScope.loginid != null}">
             <h3>Let us know your opinion on these subjects...</h3>
@@ -99,7 +101,6 @@ and open the template in the editor.
                 <input type="submit" id="Submit${subject.subjectid}" value="Submit" class="btn btn-lg btn-success blogbutton" onclick="sendMessage(${subject.subjectid})">
             </c:forEach>
         </div>
-        </c:if>
     </center>
         </main>
         <c:if test="${login || sessionScope.loginid != null}">

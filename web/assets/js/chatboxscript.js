@@ -33,5 +33,12 @@ $(document).ready(function(){
            $(".msg_body").scrollTop($(".msg_body")[0].scrollHeight);
        }
    });
+   
+    $(document).on(
+        "click",
+	".hideshowblogbutton",
+            function() {
+                $(".hideshowblogbutton").hide();
+    });
         
 });

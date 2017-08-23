@@ -62,6 +62,8 @@ public class HandlerFactory {
                 return new AwayHandler(persons);
             case "setCustom":
                 return new CustomHandler(persons);
+            case "getAllAdministratorsAngular":
+                return new GetAllAdministratorsHandler(persons);
             case "defaulthandler":
                 return new IndexHandler();
             default:
